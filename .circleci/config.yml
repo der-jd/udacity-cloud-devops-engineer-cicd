@@ -5,49 +5,69 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+#  say-hello:
+#    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+#    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+#    docker:
+#      - image: cimg/base:stable
+#    # Add steps to the job
+#    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+#    steps:
+#      - checkout
+#      - run:
+#          name: "Say hello"
+#          command: "echo Hello, World!"
+#
+#  print-hello:
+#    docker:
+#      - image: alpine:latest
+#    steps:
+#      - run:
+#          name: "print hello"
+#          command: "echo hello"
+#
+#  print-world:
+#    docker:
+#      - image: alpine:latest
+#    steps:
+#      - run:
+#          name: "print world"
+#          command: "echo world"
+#
+#  print-my-name:
+#    docker:
+#      - image: alpine:latest
+#    steps:
+#      - run: echo $MY_NAME
 
-  # my jobs
-  print-hello:
+  save_hello_world_output:
     docker:
       - image: alpine:latest
     steps:
-      - run:
-          name: "print hello"
-          command: "echo hello"
+      - run: echo "hello world from file" > output.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - output.txt
 
-  print-world:
+  print_output_file:
     docker:
       - image: alpine:latest
     steps:
-      - run:
-          name: "print world"
-          command: "echo world"
-
-  print-my-name:
-    docker:
-      - image: alpine:latest
-    steps:
-      - run: echo $MY_NAME
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: cat /tmp/workspace/output.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
-      - print-hello
-      - print-world:
-          requires: [print-hello]
-      - print-my-name
+#      - say-hello
+#      - print-hello
+#      - print-world:
+#          requires: [print-hello]
+#      - print-my-name
+      - save_hello_world_output
+      - print_output_file:
+          requires: [save_hello_world_output]
