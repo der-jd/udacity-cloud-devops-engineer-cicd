@@ -2,6 +2,10 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+orbs:
+  # see https://circleci.com/developer/orbs/orb/circleci/aws-cli
+  aws-cli: circleci/aws-cli@2.0.3
+
 commands:
   print_pipeline_id:
     description: Print a pipeline ID
@@ -11,40 +15,40 @@ commands:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-#  say-hello:
-#    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-#    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-#    docker:
-#      - image: cimg/base:stable
-#    # Add steps to the job
-#    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-#    steps:
-#      - checkout
-#      - run:
-#          name: "Say hello"
-#          command: "echo Hello, World!"
-#
-#  print-hello:
-#    docker:
-#      - image: alpine:latest
-#    steps:
-#      - run:
-#          name: "print hello"
-#          command: "echo hello"
-#
-#  print-world:
-#    docker:
-#      - image: alpine:latest
-#    steps:
-#      - run:
-#          name: "print world"
-#          command: "echo world"
-#
-#  print-my-name:
-#    docker:
-#      - image: alpine:latest
-#    steps:
-#      - run: echo $MY_NAME
+  say-hello:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/base:stable
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - run:
+          name: "Say hello"
+          command: "echo Hello, World!"
+
+  print-hello:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run:
+          name: "print hello"
+          command: "echo hello"
+
+  print-world:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run:
+          name: "print world"
+          command: "echo world"
+
+  print-my-name:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run: echo $MY_NAME
 
   save_hello_world_output:
     docker:
@@ -79,12 +83,24 @@ jobs:
           command: echo job failed
           when: on_fail
 
+  # see https://circleci.com/developer/orbs/orb/circleci/aws-cli
+  add-ec2-instances-ip-to-ansible-inventory:
+      executor: aws-cli/default
+      steps:
+        - checkout
+        - aws-cli/setup:
+            aws-access-key-id: $AWS_ACCESS_KEY_ID
+            aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
+            aws-region: $AWS_REGION
+        - run: ./ansible/add-ec2-instances-ip-to-inventory.sh
+        - run: cat ./ansible/inventory.txt
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
-#      - say-hello
+      - say-hello
 #      - print-hello
 #      - print-world:
 #          requires: [print-hello]
@@ -92,5 +108,6 @@ workflows:
 #      - save_hello_world_output
 #      - print_output_file:
 #          requires: [save_hello_world_output]
-      - dummy-job
-      - fail-on-purpose
+#      - dummy-job
+#      - fail-on-purpose
+      - add-ec2-instances-ip-to-ansible-inventory
