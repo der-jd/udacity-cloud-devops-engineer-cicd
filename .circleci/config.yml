@@ -138,3 +138,5 @@ workflows:
 #      - dummy-job
 #      - fail-on-purpose
       - add-ec2-instances-ip-to-ansible-inventory
+      - print-ansible-inventory:
+          requires: [add-ec2-instances-ip-to-ansible-inventory]
