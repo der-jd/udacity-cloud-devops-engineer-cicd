@@ -85,30 +85,42 @@ jobs:
 
   # see https://circleci.com/developer/orbs/orb/circleci/aws-cli
   add-ec2-instances-ip-to-ansible-inventory:
-      parameters:
-        access-key:
-          type: env_var_name
-          default: AWS_ACCESS_KEY
-        secret-key:
-          type: env_var_name
-          default: AWS_SECRET_ACCESS_KEY
-        region:
-          type: env_var_name
-          default: AWS_REGION
-      executor: aws-cli/default
-      steps:
-        - checkout
-        - aws-cli/setup:
-            aws-access-key-id: << parameters.access-key >>
-            aws-secret-access-key: << parameters.secret-key >>
-            aws-region: << parameters.region >>
-        - run:
-            command: |
-              chmod ugo+x ./ansible/add-ec2-instances-ip-to-inventory.sh
-              chmod ugo+x ./ansible/get-ec2-instances-ip.sh
-              ./ansible/get-ec2-instances-ip.sh
-              ./ansible/add-ec2-instances-ip-to-inventory.sh
-        - run: cat ./ansible/inventory.txt
+    parameters:
+      access-key:
+        type: env_var_name
+        default: AWS_ACCESS_KEY
+      secret-key:
+        type: env_var_name
+        default: AWS_SECRET_ACCESS_KEY
+      region:
+        type: env_var_name
+        default: AWS_REGION
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws-access-key-id: << parameters.access-key >>
+          aws-secret-access-key: << parameters.secret-key >>
+          aws-region: << parameters.region >>
+      - run:
+          command: |
+            cat inventory.txt
+            chmod ugo+x ./ansible/add-ec2-instances-ip-to-inventory.sh
+            chmod ugo+x ./ansible/get-ec2-instances-ip.sh
+            ./ansible/get-ec2-instances-ip.sh
+            ./ansible/add-ec2-instances-ip-to-inventory.sh
+      - save_cache:
+          paths:
+            - ./ansible/inventory.txt
+          key: ansible-inventory
+
+  print-ansible-inventory:
+    docker:
+      - image: alpine:latest
+    steps:
+      - restore_cache:
+          keys: [ansible-inventory]
+      - run: cat inventory.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
