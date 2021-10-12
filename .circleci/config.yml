@@ -74,7 +74,6 @@ jobs:
     docker:
       - image: alpine:latest
     steps:
-      - run: do something
       - run: return 1
       - run:
           command: echo job failed
