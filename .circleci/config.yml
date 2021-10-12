@@ -99,16 +99,16 @@ jobs:
       steps:
         - checkout
         - aws-cli/setup:
-            aws-access-key-id: ${<< parameters.access-key >>}
-            aws-secret-access-key: ${<< parameters.secret-key >>}
-            aws-region: ${<< AWS_REGION >>}
+            aws-access-key-id: << parameters.access-key >>
+            aws-secret-access-key: << parameters.secret-key >>
+            aws-region: << parameters.region >>
         - run: ./ansible/add-ec2-instances-ip-to-inventory.sh
         - run: cat ./ansible/inventory.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  my-workflow:
     jobs:
       - say-hello
 #      - print-hello
