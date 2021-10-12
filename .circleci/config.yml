@@ -105,6 +105,8 @@ jobs:
         - run:
             command: |
               chmod ugo+x ./ansible/add-ec2-instances-ip-to-inventory.sh
+              chmod ugo+x ./ansible/get-ec2-instances-ip.sh
+              ./ansible/get-ec2-instances-ip.sh
               ./ansible/add-ec2-instances-ip-to-inventory.sh
         - run: cat ./ansible/inventory.txt
 
