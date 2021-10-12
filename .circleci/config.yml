@@ -104,7 +104,7 @@ jobs:
           aws-region: << parameters.region >>
       - run:
           command: |
-            cat inventory.txt
+            cat ./ansible/inventory.txt
             chmod ugo+x ./ansible/add-ec2-instances-ip-to-inventory.sh
             chmod ugo+x ./ansible/get-ec2-instances-ip.sh
             ./ansible/get-ec2-instances-ip.sh
