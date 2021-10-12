@@ -69,6 +69,15 @@ jobs:
       - image: alpine:latest
     steps:
       - print_pipeline_id
+      - run:
+          command: echo job failed
+          when: on_fail
+
+  fail-on-purpose:
+    docker:
+      - image: alpine:latest
+    steps:
+      - run: return 1
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -83,4 +92,6 @@ workflows:
 #      - save_hello_world_output
 #      - print_output_file:
 #          requires: [save_hello_world_output]
-      - dummy-job
+      - fail-on-purpose
+      - dummy-job:
+          requires: [fail-on-purpose]
