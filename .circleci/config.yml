@@ -85,13 +85,23 @@ jobs:
 
   # see https://circleci.com/developer/orbs/orb/circleci/aws-cli
   add-ec2-instances-ip-to-ansible-inventory:
+      parameters:
+        access-key:
+          type: env_var_name
+          default: AWS_ACCESS_KEY
+        secret-key:
+          type: env_var_name
+          default: AWS_SECRET_ACCESS_KEY
+        region:
+          type: env_var_name
+          default: AWS_REGION
       executor: aws-cli/default
       steps:
         - checkout
         - aws-cli/setup:
-            aws-access-key-id: $AWS_ACCESS_KEY_ID
-            aws-secret-access-key: $AWS_SECRET_ACCESS_KEY
-            aws-region: $AWS_REGION
+            aws-access-key-id: ${<< parameters.access-key >>}
+            aws-secret-access-key: ${<< parameters.secret-key >>}
+            aws-region: ${<< AWS_REGION >>}
         - run: ./ansible/add-ec2-instances-ip-to-inventory.sh
         - run: cat ./ansible/inventory.txt
 
