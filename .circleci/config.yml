@@ -103,8 +103,10 @@ jobs:
           aws-secret-access-key: << parameters.secret-key >>
           aws-region: << parameters.region >>
       - run:
+          name: get and add ec2 instances ip
           command: |
             cat ./ansible/inventory.txt
+            echo ------------------------
             chmod ugo+x ./ansible/add-ec2-instances-ip-to-inventory.sh
             chmod ugo+x ./ansible/get-ec2-instances-ip.sh
             ./ansible/get-ec2-instances-ip.sh
@@ -112,15 +114,16 @@ jobs:
       - save_cache:
           paths:
             - ./ansible/inventory.txt
-          key: ansible-inventory
+          key: ansible-inventory-{{ epoch }}
 
   print-ansible-inventory:
     docker:
       - image: alpine:latest
     steps:
       - restore_cache:
-          keys: [ansible-inventory]
-      - run: cat inventory.txt
+          keys:
+            - ansible-inventory-{{ epoch }}
+      - run: cat ./ansible/inventory.txt
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
