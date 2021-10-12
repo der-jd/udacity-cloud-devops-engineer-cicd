@@ -44,9 +44,9 @@ jobs:
     docker:
       - image: alpine:latest
     steps:
-      - run: echo "hello world from file" > output.txt
+      - run: echo "hello world from file" > ~/output.txt
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: ~/
           paths:
             - output.txt
 
