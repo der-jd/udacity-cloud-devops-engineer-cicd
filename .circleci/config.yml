@@ -102,7 +102,10 @@ jobs:
             aws-access-key-id: << parameters.access-key >>
             aws-secret-access-key: << parameters.secret-key >>
             aws-region: << parameters.region >>
-        - run: ./ansible/add-ec2-instances-ip-to-inventory.sh
+        - run:
+            command: |
+              chmod ugo+x ./ansible/add-ec2-instances-ip-to-inventory.sh
+              ./ansible/add-ec2-instances-ip-to-inventory.sh
         - run: cat ./ansible/inventory.txt
 
 # Invoke jobs via workflows
