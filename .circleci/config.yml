@@ -111,6 +111,9 @@ jobs:
             chmod ugo+rwx ./ansible/get-ec2-instances-ip.sh
             ./ansible/get-ec2-instances-ip.sh
             ./ansible/add-ec2-instances-ip-to-inventory.sh
+            echo ------------------------
+            cat ./ansible/inventory.txt
+            echo ------------------------
       - save_cache:
           paths:
             - ./ansible/inventory.txt
@@ -141,5 +144,5 @@ workflows:
 #      - dummy-job
 #      - fail-on-purpose
       - add-ec2-instances-ip-to-ansible-inventory
-      - print-ansible-inventory:
-          requires: [add-ec2-instances-ip-to-ansible-inventory]
+#      - print-ansible-inventory:
+#          requires: [add-ec2-instances-ip-to-ansible-inventory]
