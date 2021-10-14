@@ -154,6 +154,23 @@ jobs:
           name: configure server
           command: ansible-playbook -i ./ansible/inventory.txt ./ansible/main-remote.yaml
 
+  smoke-test:
+    parameters:
+      website:
+        type: String
+    docker:
+      - image: alpine:latest
+    steps:
+      - run:
+          command: |
+            apk add --update curl
+            if curl -s --head "<< parameters.website >>"
+            then
+              echo "It worked!"
+            else
+              echo "It failed!"
+            fi
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
@@ -173,5 +190,7 @@ workflows:
 #      - print-ansible-inventory:
 #          requires: [add-ec2-instances-ip-to-ansible-inventory]
 #      - create-infrastructure
-      - configure-infrastructure
+#      - configure-infrastructure
           #requires: [create-infrastructure]
+      - smoke-test:
+          website: www.google.com
