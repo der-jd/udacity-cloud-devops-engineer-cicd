@@ -140,7 +140,7 @@ jobs:
           name: set up ec2 instance in AWS with CloudFormation
           command: |
             chmod +x create-stack.sh
-            ./create-stack.sh udacity-circleci template.yaml
+            ./create-stack.sh udacity template.yaml
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
