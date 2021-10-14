@@ -193,4 +193,4 @@ workflows:
 #      - configure-infrastructure
           #requires: [create-infrastructure]
       - smoke-test:
-          website: www.google.com
+          website: www.google666.com
