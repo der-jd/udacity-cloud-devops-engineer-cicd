@@ -129,13 +129,10 @@ jobs:
       - run: cat ./inventory.txt
 
   create-infrastructure:
-    executor: aws-cli/default
+    docker:
+        - image: amazon/aws-cli
     steps:
       - checkout
-      - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          aws-region: AWS_REGION
       - run:
           name: set up ec2 instance in AWS with CloudFormation
           command: |
