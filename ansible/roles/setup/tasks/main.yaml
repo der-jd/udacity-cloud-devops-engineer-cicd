@@ -27,6 +27,13 @@
     production: yes
     state: present
 
+- name: fix pm2 installation
+  become: yes
+  shell: |
+    if [ -d "/usr/bin/node" ]; then
+      ln -s /usr/bin/nodejs /usr/bin/node
+    fi
+
 - name: creates directory
   file:
     path: ~/web
@@ -35,7 +42,7 @@
 - name: copy index test page
   template:
     src: files/index.js
-    dest: /web/index.js
+    dest: ~/web/index.js
     backup: yes
 
 - name: executing node
