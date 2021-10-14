@@ -139,12 +139,27 @@ jobs:
             chmod +x create-stack.sh
             ./create-stack.sh udacity template.yaml
 
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: [a3:c7:a2:27:b9:f7:55:c6:97:34:1e:96:0a:8d:22:e8]
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible # install the dependencies for ansible
+      - run:
+          name: configure server
+          command: ansible-playbook -i ./ansible/inventory.txt ./ansible/main-remote.yaml
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   my-workflow:
     jobs:
-      - say-hello
+#      - say-hello
 #      - print-hello
 #      - print-world:
 #          requires: [print-hello]
@@ -157,4 +172,6 @@ workflows:
 #      - add-ec2-instances-ip-to-ansible-inventory
 #      - print-ansible-inventory:
 #          requires: [add-ec2-instances-ip-to-ansible-inventory]
-      - create-infrastructure
+#      - create-infrastructure
+      - configure-infrastructure
+          #requires: [create-infrastructure]
