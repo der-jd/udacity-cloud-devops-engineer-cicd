@@ -278,8 +278,13 @@ workflows:
 #      - add-ec2-instances-ip-to-ansible-inventory
 #      - print-ansible-inventory:
 #          requires: [add-ec2-instances-ip-to-ansible-inventory]
-      - create-infrastructure
+#      - create-infrastructure
 #      - configure-infrastructure
 #          requires: [create-infrastructure]
 #      - smoke-test:
 #          website: www.google666.com
+
+      - create_and_deploy_front_end
+      - get_last_deployment_id
+      - promote_to_production
+      - clean_up_old_front_end
