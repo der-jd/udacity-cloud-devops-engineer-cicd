@@ -1,0 +1,25 @@
+# Exercise - Rollback
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: udacity cloud devops engineer ND9991 C3 L4
+
+Resources:
+
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      SecurityGroups:
+        - !Ref InstanceSecurityGroup
+      KeyName: AWS_EC2_DEMO_PRIVATE_COMPUTER
+      ImageId: ami-058e6df85cfc7760b # Amazon Linux 2 (64-bit x86)
+      InstanceType: t2.micro
+
+  InstanceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0

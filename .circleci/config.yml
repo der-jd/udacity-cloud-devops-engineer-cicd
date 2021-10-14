@@ -128,6 +128,18 @@ jobs:
             - ansible-inventory-{{ .Environment.CIRCLE_WORKFLOW_ID }}
       - run: cat ./inventory.txt
 
+  create-infrastructure:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
+      - run:
+          name: set up ec2 instance in AWS with CloudFormation
+          command: create-stack.sh udacity-circleci template.yaml
+
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
@@ -143,6 +155,7 @@ workflows:
 #          requires: [save_hello_world_output]
 #      - dummy-job
 #      - fail-on-purpose
-      - add-ec2-instances-ip-to-ansible-inventory
+#      - add-ec2-instances-ip-to-ansible-inventory
 #      - print-ansible-inventory:
 #          requires: [add-ec2-instances-ip-to-ansible-inventory]
+      - create-infrastructure
