@@ -7,13 +7,13 @@
 - name: "upgrade packages"
   become: yes
   apt:
-    upgrade: yes
+    upgrade: "yes"
 
 - name: remove dependencies that are no longer required
   become: yes
   apt:
     autoremove: yes
-    
+
 - name: install dependencies
   become: yes
   apt:
@@ -37,7 +37,7 @@
     src: files/index.js
     dest: /web/index.js
     backup: yes
-    
+
 - name: executing node
   shell: |
     pm2 start ~/web/index.js -f
