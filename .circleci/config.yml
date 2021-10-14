@@ -154,8 +154,8 @@ jobs:
           name: fail on purpose
           command: return 1
       - destroy-environment:
-          stack_name: udacity
           when: on_fail
+          stack_name: udacity
 
   configure-infrastructure:
     docker:
