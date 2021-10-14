@@ -15,13 +15,14 @@ commands:
 
   destroy-environment:
     description: roll back aws infrastructure
-    #parameters:
-     # stack_name:
-      #  type: string
+    parameters:
+      stack_name:
+        type: string
     steps:
       - run:
           name: delete aws stack
           command: aws cloudformation delete-stack --stack-name udacity #<< parameters.stack_name >>
+          when: on_fail
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
@@ -154,8 +155,7 @@ jobs:
           name: fail on purpose
           command: return 1
       - destroy-environment:
-          when: on_fail
-          #stack_name: udacity
+          stack_name: udacity
 
   configure-infrastructure:
     docker:
