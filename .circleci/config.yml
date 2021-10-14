@@ -157,7 +157,7 @@ jobs:
   smoke-test:
     parameters:
       website:
-        type: String
+        type: string
     docker:
       - image: alpine:latest
     steps:
