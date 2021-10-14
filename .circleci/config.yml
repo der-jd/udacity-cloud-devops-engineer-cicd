@@ -169,6 +169,7 @@ jobs:
               echo "It worked!"
             else
               echo "It failed!"
+              return 1
             fi
 
 # Invoke jobs via workflows
