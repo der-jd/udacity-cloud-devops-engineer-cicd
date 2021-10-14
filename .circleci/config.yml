@@ -150,12 +150,12 @@ jobs:
           name: set up ec2 instance in AWS with CloudFormation
           command: |
             chmod +x create-stack.sh
-            ./create-stack.sh udacity template.yaml
-      - run:
-          name: fail on purpose
-          command: return 1
+            ./create-stack.sh udacity-${CIRCLE_WORKFLOW_ID} template.yaml
+      #- run:
+       #   name: fail on purpose
+        #  command: return 1
       - destroy-environment:
-          stack_name: udacity
+          stack_name: udacity-${CIRCLE_WORKFLOW_ID}
 
   configure-infrastructure:
     docker:
