@@ -138,7 +138,9 @@ jobs:
           aws-region: AWS_REGION
       - run:
           name: set up ec2 instance in AWS with CloudFormation
-          command: create-stack.sh udacity-circleci template.yaml
+          command: |
+            chmod +x create-stack.sh
+            ./create-stack.sh udacity-circleci template.yaml
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
